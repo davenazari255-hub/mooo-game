@@ -1,7 +1,7 @@
 "use client";
 
 import { CoinIcon, UpgradeIcon } from "../Icons";
-import { Silo } from "../art/FarmArt";
+import { House } from "../art/FarmArt";
 import { Panel } from "./Panel";
 
 export default function UpgradePanel() {
@@ -14,7 +14,7 @@ export default function UpgradePanel() {
           border: "1.5px solid #c8a35f",
         }}
       >
-        <Silo size={26} />
+        <House size={30} />
         <div className="flex-1 leading-tight">
           <div className="text-[11px] font-black text-panel-ink">
             انبار سطح ۳

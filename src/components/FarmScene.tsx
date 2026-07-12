@@ -1,16 +1,7 @@
 "use client";
 
 import { MapIcon } from "./Icons";
-import {
-  Barn,
-  Silo,
-  House,
-  Windmill,
-  Tree,
-  PineTree,
-  Cow,
-  Sheep,
-} from "./art/FarmArt";
+import { House, Tractor, Tree, PineTree, Cow, Sheep, Wheat } from "./art/FarmArt";
 
 export default function FarmScene() {
   return (
@@ -20,7 +11,7 @@ export default function FarmScene() {
         style={{ boxShadow: "0 4px 0 rgba(0,0,0,0.35)" }}
       >
         <div className="relative h-[240px]">
-          {/* آسمان و زمین به‌صورت SVG پس‌زمینه */}
+          {/* منظره پس‌زمینه (SVG) */}
           <svg
             viewBox="0 0 360 240"
             preserveAspectRatio="xMidYMid slice"
@@ -29,98 +20,67 @@ export default function FarmScene() {
             <defs>
               <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stopColor="#bfe6f5" />
-                <stop offset="1" stopColor="#e3f2d8" />
+                <stop offset="1" stopColor="#e6f3da" />
               </linearGradient>
             </defs>
             {/* آسمان */}
-            <rect x="0" y="0" width="360" height="120" fill="url(#sky)" />
-            {/* تپه‌های دور */}
-            <path d="M0 120c60-34 120-30 180-8s120 14 180-10v40H0z" fill="#a9d178" />
-            <path d="M0 128c80-22 140-8 210 6s110 6 150-12v30H0z" fill="#8fc35f" />
-            {/* زمین سبز */}
-            <rect x="0" y="112" width="360" height="128" fill="#8ec457" />
-            {/* رودخانه */}
-            <path
-              d="M-10 150C40 140 30 180 70 190S60 240 40 250H-20z"
-              fill="#6cc0e6"
-              stroke="#4fa7d6"
-              strokeWidth="2"
-            />
-            <path d="M2 158c20-4 18 16 34 24" stroke="#bfe8f7" strokeWidth="2" fill="none" opacity="0.7" />
-            {/* مزارع شخم‌خورده */}
-            <g stroke="#7a5a2e" strokeWidth="1">
-              <path d="M150 150h96l14 34h-96z" fill="#c79a54" />
-              <path d="M154 156l92 0M158 164l92 0M162 172l92 0M166 180l92 0" opacity="0.5" />
+            <rect x="0" y="0" width="360" height="118" fill="url(#sky)" />
+            {/* ابرها */}
+            <g fill="#ffffff" opacity="0.9">
+              <ellipse cx="70" cy="30" rx="22" ry="11" />
+              <ellipse cx="90" cy="34" rx="16" ry="9" />
+              <ellipse cx="270" cy="24" rx="20" ry="10" />
+              <ellipse cx="292" cy="28" rx="14" ry="8" />
             </g>
-            {/* ردیف محصولات روی مزرعه */}
-            <g fill="#e8b93a" stroke="#b8892a" strokeWidth="0.6">
-              {Array.from({ length: 6 }).map((_, r) =>
-                Array.from({ length: 10 }).map((_, c) => (
-                  <circle key={`${r}-${c}`} cx={162 + c * 9} cy={158 + r * 4.4} r="1.7" />
-                ))
-              )}
+            {/* تپه‌های دور */}
+            <path d="M0 118c60-30 120-26 180-6s120 12 180-10v30H0z" fill="#a9d178" />
+            <path d="M0 126c80-20 140-6 210 6s110 6 150-10v26H0z" fill="#8fc35f" />
+            {/* زمین */}
+            <rect x="0" y="112" width="360" height="128" fill="#8ec457" />
+            <rect x="0" y="112" width="360" height="128" fill="url(#sky)" opacity="0" />
+            {/* رودخانه */}
+            <path d="M-10 150C40 142 30 182 70 192S60 244 40 252H-20z" fill="#6cc0e6" stroke="#4fa7d6" strokeWidth="2" />
+            <path d="M4 160c18-4 16 16 32 24" stroke="#bfe8f7" strokeWidth="2" fill="none" opacity="0.7" />
+            {/* مزرعه شخم‌خورده */}
+            <g>
+              <path d="M148 152h104l16 40H150z" fill="#c79a54" stroke="#a5793a" strokeWidth="1.5" strokeLinejoin="round" />
+              <path d="M153 160l100 0M157 170l102 0M161 180l104 0" stroke="#a5793a" strokeWidth="1.2" opacity="0.6" />
+              <g fill="#7cae3c">
+                {Array.from({ length: 5 }).map((_, r) =>
+                  Array.from({ length: 11 }).map((_, c) => (
+                    <circle key={`${r}-${c}`} cx={160 + c * 9} cy={160 + r * 6} r="2" />
+                  ))
+                )}
+              </g>
             </g>
             {/* مسیر خاکی */}
-            <path d="M120 240c10-40 40-60 40-90 0-16-8-24-8-38" stroke="#c9a25a" strokeWidth="10" fill="none" opacity="0.6" strokeLinecap="round" />
+            <path d="M110 240c8-36 34-52 34-84" stroke="#d3b072" strokeWidth="11" fill="none" opacity="0.7" strokeLinecap="round" />
           </svg>
 
-          {/* عناصر روی صحنه (DOM overlay برای کنترل دقیق موقعیت) */}
-          {/* درخت‌ها */}
-          <div className="absolute" style={{ top: 6, right: 12 }}>
-            <Tree size={44} />
-          </div>
-          <div className="absolute" style={{ top: 18, right: 54 }}>
-            <PineTree size={34} />
-          </div>
-          <div className="absolute" style={{ top: 10, left: 92 }}>
-            <Tree size={34} />
+          {/* عناصر رنگی روی صحنه */}
+          <div className="absolute" style={{ top: 4, right: 8 }}><Tree size={52} /></div>
+          <div className="absolute" style={{ top: 22, right: 52 }}><PineTree size={40} /></div>
+          <div className="absolute" style={{ top: 8, left: 84 }}><Tree size={40} /></div>
+
+          {/* خانه مزرعه */}
+          <div className="absolute" style={{ top: 40, left: 14 }}><House size={86} /></div>
+
+          {/* تراکتور کنار مزرعه */}
+          <div className="absolute" style={{ top: 96, left: "50%", transform: "translateX(-58%)" }}>
+            <Tractor size={66} />
           </div>
 
-          {/* آسیاب بادی */}
-          <div className="absolute" style={{ top: 30, right: 92 }}>
-            <Windmill size={40} />
-          </div>
-
-          {/* خانه آبی */}
-          <div className="absolute" style={{ top: 58, left: 20 }}>
-            <House size={72} />
-          </div>
-
-          {/* انبار + سیلو */}
-          <div className="absolute flex items-end" style={{ top: 44, left: "50%", transform: "translateX(-50%)" }}>
-            <div style={{ marginRight: -6, marginBottom: 6 }}>
-              <Silo size={30} />
-            </div>
-            <Barn size={104} />
-          </div>
+          {/* گندم کنار مزرعه */}
+          <div className="absolute" style={{ top: 150, right: 96 }}><Wheat size={30} /></div>
 
           {/* حیوانات */}
-          <div className="absolute" style={{ bottom: 34, left: 46 }}>
-            <Cow size={48} />
-          </div>
-          <div className="absolute" style={{ bottom: 14, left: 96 }}>
-            <Cow size={40} />
-          </div>
-          <div className="absolute" style={{ bottom: 30, right: 60 }}>
-            <Sheep size={40} />
-          </div>
-          <div className="absolute" style={{ bottom: 10, right: 104 }}>
-            <Sheep size={34} />
-          </div>
-
-          {/* حصار */}
-          <svg className="absolute" style={{ bottom: 6, right: 40 }} width="90" height="20" viewBox="0 0 90 20">
-            <g stroke="#c9a25a" strokeWidth="2.4" fill="#e0c184">
-              {[0, 18, 36, 54, 72].map((x) => (
-                <rect key={x} x={x} y="4" width="5" height="14" rx="1" />
-              ))}
-              <line x1="0" y1="9" x2="80" y2="9" />
-              <line x1="0" y1="14" x2="80" y2="14" />
-            </g>
-          </svg>
+          <div className="absolute" style={{ bottom: 30, left: 40 }}><Cow size={56} /></div>
+          <div className="absolute" style={{ bottom: 8, left: 100 }}><Cow size={46} /></div>
+          <div className="absolute" style={{ bottom: 26, right: 52 }}><Sheep size={46} /></div>
+          <div className="absolute" style={{ bottom: 6, right: 100 }}><Sheep size={38} /></div>
 
           {/* تابلوی زمین شما */}
-          <div className="absolute" style={{ bottom: 8, left: 10 }}>
+          <div className="absolute" style={{ bottom: 8, left: 8 }}>
             <div className="relative flex flex-col items-center">
               <div
                 className="px-2.5 py-1 rounded-md text-center leading-tight"
@@ -142,17 +102,12 @@ export default function FarmScene() {
             aria-label="نقشه"
             className="absolute flex items-center justify-center"
             style={{
-              bottom: 10,
-              right: 10,
-              width: 48,
-              height: 48,
-              borderRadius: 9999,
+              bottom: 10, right: 10, width: 48, height: 48, borderRadius: 9999,
               background: "linear-gradient(180deg,#ffd94f,#e6a11f)",
-              border: "3px solid #fff3cf",
-              boxShadow: "0 3px 0 #b47b12",
+              border: "3px solid #fff3cf", boxShadow: "0 3px 0 #b47b12",
             }}
           >
-            <MapIcon size={26} />
+            <MapIcon size={28} />
           </button>
         </div>
       </div>
