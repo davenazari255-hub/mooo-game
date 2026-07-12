@@ -1,14 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import {
+  NavFarm,
+  NavBuild,
+  CartIcon,
+  NavMissions,
+  NavFriends,
+  NavWallet,
+} from "./Icons";
 
-const items = [
-  { key: "farm", label: "مزرعه", icon: "🚜" },
-  { key: "build", label: "سازه‌ها", icon: "🏗️" },
-  { key: "market", label: "بازار", icon: "🛒" },
-  { key: "missions", label: "ماموریت‌ها", icon: "📜" },
-  { key: "friends", label: "دوستان", icon: "👥" },
-  { key: "wallet", label: "کیف پول", icon: "👛" },
+type NavItem = {
+  key: string;
+  label: string;
+  Icon: React.ComponentType<{ size?: number }>;
+};
+
+const items: NavItem[] = [
+  { key: "farm", label: "مزرعه", Icon: NavFarm },
+  { key: "build", label: "سازه‌ها", Icon: NavBuild },
+  { key: "market", label: "بازار", Icon: CartIcon },
+  { key: "missions", label: "ماموریت‌ها", Icon: NavMissions },
+  { key: "friends", label: "دوستان", Icon: NavFriends },
+  { key: "wallet", label: "کیف پول", Icon: NavWallet },
 ];
 
 export default function BottomNav() {
@@ -26,26 +40,23 @@ export default function BottomNav() {
       <div className="flex items-stretch justify-around px-1 py-1.5">
         {items.map((it) => {
           const on = active === it.key;
+          const { Icon } = it;
           return (
             <button
               key={it.key}
               onClick={() => setActive(it.key)}
-              className="flex flex-col items-center gap-0.5 flex-1 py-1 rounded-lg transition-colors"
+              className="flex flex-col items-center gap-1 flex-1 py-1 rounded-lg transition-colors"
               style={
                 on
                   ? {
-                      background:
-                        "linear-gradient(180deg,#c14a26,#8f2f16)",
+                      background: "linear-gradient(180deg,#c14a26,#8f2f16)",
                       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2)",
                     }
                   : undefined
               }
             >
-              <span
-                className="text-lg leading-none"
-                style={{ filter: on ? "none" : "grayscale(0.35)" }}
-              >
-                {it.icon}
+              <span style={{ opacity: on ? 1 : 0.55 }}>
+                <Icon size={22} />
               </span>
               <span
                 className={`text-[8.5px] font-black ${

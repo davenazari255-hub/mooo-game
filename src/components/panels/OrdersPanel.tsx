@@ -1,11 +1,12 @@
 "use client";
 
-import { CoinIcon, GemIcon, ProgressBar } from "../Icons";
+import { CoinIcon, GemIcon, ProgressBar, ClipboardIcon } from "../Icons";
+import { Wheat } from "../art/FarmArt";
 import { Panel } from "./Panel";
 
 export default function OrdersPanel() {
   return (
-    <Panel icon="📋" title="سفارشات">
+    <Panel icon={<ClipboardIcon size={16} />} title="سفارشات">
       <div
         className="rounded-lg p-2 flex flex-col gap-1.5"
         style={{
@@ -15,7 +16,7 @@ export default function OrdersPanel() {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-lg">🌾</span>
+            <Wheat size={20} />
             <span className="text-[11px] font-black text-panel-ink">
               سفارش گندم
             </span>

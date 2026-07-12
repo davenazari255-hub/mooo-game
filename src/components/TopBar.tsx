@@ -1,6 +1,7 @@
 "use client";
 
-import { CoinIcon, GemIcon, EnergyIcon, PlusBadge } from "./Icons";
+import { CoinIcon, GemIcon, EnergyIcon, PlusBadge, MenuIcon } from "./Icons";
+import { FarmerAvatar } from "./art/FarmerAvatar";
 
 function StatChip({
   icon,
@@ -53,13 +54,10 @@ export default function TopBar({
         {/* کارت پروفایل */}
         <div className="stat-chip flex items-center gap-2 rounded-full pl-3 pr-1 py-1 flex-1 min-w-0">
           <div
-            className="relative w-9 h-9 rounded-full shrink-0 flex items-center justify-center text-lg"
-            style={{
-              background: "radial-gradient(circle at 40% 30%, #ffd98a, #e08b2c)",
-              border: "2px solid #f6c445",
-            }}
+            className="relative w-9 h-9 rounded-full shrink-0 overflow-hidden flex items-center justify-center"
+            style={{ border: "2px solid #f6c445" }}
           >
-            👨‍🌾
+            <FarmerAvatar size={34} />
             <span className="absolute -bottom-1 -right-1 bg-[#3b7d1e] text-[8px] font-black text-white px-1 rounded-full border border-[#2a5c12]">
               LV {level}
             </span>
@@ -90,11 +88,7 @@ export default function TopBar({
           aria-label="منو"
           className="stat-chip w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
         >
-          <div className="flex flex-col gap-1">
-            <span className="block w-4 h-0.5 bg-[#f6c445] rounded" />
-            <span className="block w-4 h-0.5 bg-[#f6c445] rounded" />
-            <span className="block w-4 h-0.5 bg-[#f6c445] rounded" />
-          </div>
+          <MenuIcon size={18} />
         </button>
       </div>
 

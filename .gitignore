@@ -32,3 +32,5 @@ next-env.d.ts
 
 # reference design image
 base mooo game.png
+
+.vercel

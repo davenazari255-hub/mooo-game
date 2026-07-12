@@ -1,6 +1,6 @@
 "use client";
 
-import { CoinIcon, GemIcon, ProgressBar } from "./Icons";
+import { CoinIcon, GemIcon, ProgressBar, TrophyIcon, GiftIcon, ChestIcon } from "./Icons";
 
 function MiniCard({ children }: { children: React.ReactNode }) {
   return (
@@ -16,7 +16,7 @@ export default function InfoCards() {
       {/* لیگ مزرعه‌داران */}
       <MiniCard>
         <div className="flex items-center gap-1">
-          <span className="text-xl">🏆</span>
+          <TrophyIcon size={22} />
           <div className="leading-tight">
             <div className="text-[10px] font-black text-panel-ink">
               لیگ مزرعه‌داران
@@ -35,7 +35,7 @@ export default function InfoCards() {
       {/* ماموریت روزانه */}
       <MiniCard>
         <div className="flex items-center gap-1">
-          <span className="text-xl">🎁</span>
+          <GiftIcon size={22} />
           <div className="leading-tight">
             <div className="text-[10px] font-black text-panel-ink">
               ماموریت روزانه
@@ -64,7 +64,7 @@ export default function InfoCards() {
       {/* صندوق ویژه */}
       <MiniCard>
         <div className="flex items-center gap-1">
-          <span className="text-xl">🧰</span>
+          <ChestIcon size={22} />
           <div className="leading-tight">
             <div className="text-[10px] font-black text-panel-ink">
               صندوق ویژه
