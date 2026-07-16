@@ -10,94 +10,161 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
 }
 
 body {
-  background: #140d06;
-  color: #f2e0b8;
+  background: #6ea84a;
+  color: #fff7dc;
+  font-family: 'Vazirmatn', system-ui, sans-serif;
 }
 
-/* پس‌زمینه چوبی صفحه */
-.app-bg {
+/* ───────────────── پس‌زمینه بازی - چمنزار Isometric ───────────────── */
+.game-bg {
   background:
-    radial-gradient(120% 80% at 50% 0%, #3a2a17 0%, #241811 45%, #140d06 100%);
+    radial-gradient(120% 60% at 50% 0%, #b9e07f 0%, #8ec557 30%, #6fa93f 100%);
   min-height: 100vh;
   min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
 }
 
 /* اسکرول‌بار مخفی */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ───────────────────────── Header ───────────────────────── */
+.stat-chip {
+  background: linear-gradient(180deg, rgba(30, 20, 10, 0.92), rgba(18, 12, 6, 0.92));
+  border: 1.5px solid rgba(120, 90, 50, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 0 rgba(0,0,0,0.35);
 }
 
-/* نوار پیشرفت */
 .xp-track {
   background: rgba(0, 0, 0, 0.45);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-/* بافت پنل کرمی */
-.panel {
+/* ───────────────── بافت پنل چوبی ───────────────── */
+.panel-wood {
   background:
-    linear-gradient(180deg, #f6e6c0 0%, #ecd6a2 100%);
-  border: 2px solid #6b4a24;
-  border-radius: 14px;
+    linear-gradient(180deg, #d8a76a 0%, #b07e45 100%);
+  border: 2px solid #6e4a24;
+  border-radius: 16px;
   box-shadow:
     0 4px 0 0 rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.25);
+  position: relative;
 }
 
-.panel-header {
-  background: linear-gradient(180deg, #74ac3f 0%, #558b2a 100%);
-  border-bottom: 2px solid #3f6a1f;
-  color: #fff7dc;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+.panel-wood-dark {
+  background: linear-gradient(180deg, #8a5a2e 0%, #5e3c1c 100%);
+  border: 2px solid #3f2912;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 0 0 rgba(0, 0, 0, 0.4),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.15);
 }
 
-/* دکمه سبز */
+/* ───────────────── دکمه‌های سبز ───────────────── */
 .btn-green {
   background: linear-gradient(180deg, #86c93f 0%, #5a9c27 100%);
-  border: 1px solid #487d1c;
+  border: 2px solid #487d1c;
   color: #fff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
   box-shadow: 0 3px 0 0 #3f6d18, inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
-  transition: transform 0.05s ease;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
 .btn-green:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 0 #3f6d18;
 }
 
-/* دکمه طلایی */
+/* ───────────────── دکمه طلایی ───────────────── */
 .btn-gold {
   background: linear-gradient(180deg, #ffd94f 0%, #e6a11f 100%);
-  border: 1px solid #c07f13;
+  border: 2px solid #c07f13;
   color: #5a3a08;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
   box-shadow: 0 3px 0 0 #b47b12, inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
 .btn-gold:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 0 #b47b12;
 }
 
-/* تراشه شمارنده بالای صفحه */
-.stat-chip {
-  background: linear-gradient(180deg, rgba(30, 20, 10, 0.92), rgba(18, 12, 6, 0.92));
-  border: 1px solid rgba(120, 90, 50, 0.7);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+/* ───────────────── دکمه سبز تیره (شیشه‌ای) ───────────────── */
+.btn-glass-green {
+  background: linear-gradient(180deg, rgba(94, 168, 53, 0.95) 0%, rgba(54, 112, 30, 0.95) 100%);
+  border: 2px solid #2f6b16;
+  color: #fff;
+  box-shadow: 0 3px 0 0 #1f4c10, inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+.btn-glass-green:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 #1f4c10;
 }
 
-.scene-sky {
-  background:
-    linear-gradient(180deg, #bfe3f2 0%, #d8eecf 55%, #a9d17a 100%);
+/* ───────────────── دکمه آیکونی کناری ───────────────── */
+.icon-btn-side {
+  background: linear-gradient(180deg, #b88a52 0%, #8a5e30 100%);
+  border: 2px solid #5e3f1e;
+  color: #fff7dc;
+  box-shadow: 0 3px 0 0 #3d2a13, inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.05s ease;
+}
+.icon-btn-side:active {
+  transform: translateY(2px);
+}
+
+/* ─────────── notification badge قرمز ─────────── */
+.notif-badge {
+  background: linear-gradient(180deg, #ff5252 0%, #c62828 100%);
+  border: 1px solid #fff;
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* ───────────────── تب‌های پنل ───────────────── */
+.seed-tab {
+  background: linear-gradient(180deg, rgba(140, 90, 50, 0.5), rgba(90, 60, 30, 0.5));
+  border: 1.5px solid rgba(110, 75, 40, 0.8);
+  color: #d9c89a;
+  transition: all 0.15s ease;
+}
+.seed-tab.active {
+  background: linear-gradient(180deg, #ffd94f 0%, #e6a11f 100%);
+  border-color: #b47b12;
+  color: #5a3a08;
+  box-shadow: 0 2px 0 0 #b47b12, inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ──────────────── کارت بذر ──────────────── */
+.seed-card {
+  background: linear-gradient(180deg, #f4e4c0 0%, #e2c896 100%);
+  border: 2px solid #6e4a24;
+  border-radius: 12px;
+  box-shadow: 0 3px 0 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ──────────────── آیتم‌های ناوبری پایین ──────────────── */
+.nav-item {
+  color: #c9b689;
+  transition: all 0.15s ease;
+}
+.nav-item.active {
+  color: #fff7dc;
+  background: linear-gradient(180deg, #d8854b 0%, #a55a28 60%);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.25), 0 2px 4px rgba(0,0,0,0.3);
+}
+.nav-item.locked {
+  color: #6e5a3a;
+  opacity: 0.55;
 }

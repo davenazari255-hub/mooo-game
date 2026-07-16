@@ -1,115 +1,276 @@
 "use client";
 
-import { MapIcon } from "./Icons";
-import { House, Tractor, Tree, PineTree, Cow, Sheep, Wheat } from "./art/FarmArt";
+/**
+ * Farm Grid - زمین کشاورزی 5x6 Isometric
+ * زمین‌های خالی آماده کشت با حصار چوبی اطراف
+ */
+
+type TileState = "empty" | "tilled" | "planted";
+
+type FarmTile = {
+  state: TileState;
+  // اگه planted باشه، یک Sprite کوچک از درخت/نهال
+  stage?: number;
+};
+
+const COLS = 5;
+const ROWS = 6;
+
+// ابعاد یک تایل الماسی (isometric)
+const TILE_W = 64;
+const TILE_H = 32;
+// فاصله بین تایل‌ها
+const GAP = 2;
+// حد کلی خاک
+const SOIL_W = TILE_W - 4;
+const SOIL_H = TILE_H - 2;
+
+function makeGrid(): FarmTile[][] {
+  const grid: FarmTile[][] = [];
+  for (let r = 0; r < ROWS; r++) {
+    const row: FarmTile[] = [];
+    for (let c = 0; c < COLS; c++) {
+      row.push({ state: "empty" });
+    }
+    grid.push(row);
+  }
+  return grid;
+}
+
+/**
+ * یک تایل الماسی خالی - توی عکس، زمین‌ها به شکل لوزی سبز/قهوه‌ای هستند
+ */
+function FarmTileDiamond({
+  row,
+  col,
+  state,
+}: {
+  row: number;
+  col: number;
+  state: TileState;
+}) {
+  // موقعیت ایزومتریک
+  const x = (col - (COLS - 1) / 2) * (TILE_W + GAP);
+  // ردیف‌های پایینی جلوترن (پایین‌تر)
+  const yIso = (row - (ROWS - 1) / 2) * ((TILE_H + GAP) / 2);
+  const xIso = -((col - (COLS - 1) / 2) * ((TILE_W + GAP) / 2));
+  // جابجایی برای عمق ایزومتریک
+  const top = yIso - xIso / 2;
+  const left = x / 2 + xIso / 2;
+
+  return (
+    <div
+      className="absolute"
+      style={{
+        top: `calc(50% + ${top}px)`,
+        left: `calc(50% + ${left}px)`,
+        width: TILE_W,
+        height: TILE_H,
+        transform: "translate(-50%, -50%)",
+      }}
+    >
+      {/* لوزی خاک - با چرخش 45 درجه */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: "rotateX(60deg) rotateZ(-45deg)",
+          transformStyle: "preserve-3d",
+        }}
+      >
+        <div
+          style={{
+            width: SOIL_W,
+            height: SOIL_H,
+            margin: "auto",
+            // ===== زمین خالی: طوسی-قهوه‌ای تیره =====
+            background:
+              state === "empty"
+                ? "linear-gradient(135deg, #6b4e2d 0%, #4d3520 100%)"
+                : state === "tilled"
+                ? "linear-gradient(135deg, #8a5a2e 0%, #5e3c1c 100%)"
+                : "linear-gradient(135deg, #7a5a3a 0%, #5e4022 100%)",
+            border: "1.5px solid #3a2510",
+            boxShadow:
+              "inset 0 1px 2px rgba(255,255,255,0.15), 0 1px 0 rgba(0,0,0,0.4)",
+            // الگوی خاک
+            backgroundImage:
+              state === "empty"
+                ? `repeating-linear-gradient(45deg, #3a2510 0 2px, transparent 2px 8px)`
+                : undefined,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * پست‌های چوبی حصار - در هر گوشه
+ */
+function FencePost({ x, y }: { x: number; y: number }) {
+  return (
+    <div
+      className="absolute"
+      style={{
+        top: `calc(50% + ${y}px)`,
+        left: `calc(50% + ${x}px)`,
+        transform: "translate(-50%, -100%)",
+      }}
+    >
+      <div
+        style={{
+          width: 6,
+          height: 14,
+          background: "linear-gradient(180deg, #b07e45 0%, #6e4a24 100%)",
+          border: "1px solid #3f2912",
+          borderRadius: 2,
+          boxShadow: "0 2px 2px rgba(0,0,0,0.4)",
+        }}
+      />
+    </div>
+  );
+}
+
+/**
+ * چوب‌های افقی حصار - بین پست‌ها
+ */
+function FenceRail({
+  x,
+  y,
+  w,
+  rot = 0,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  rot?: number;
+}) {
+  return (
+    <div
+      className="absolute"
+      style={{
+        top: `calc(50% + ${y}px)`,
+        left: `calc(50% + ${x}px)`,
+        transform: `translate(-50%, -100%) rotate(${rot}deg)`,
+        transformOrigin: "center bottom",
+      }}
+    >
+      <div
+        style={{
+          width: w,
+          height: 4,
+          background: "linear-gradient(180deg, #b07e45 0%, #6e4a24 100%)",
+          border: "1px solid #3f2912",
+          borderRadius: 2,
+          boxShadow: "0 1px 1px rgba(0,0,0,0.4)",
+        }}
+      />
+    </div>
+  );
+}
 
 export default function FarmScene() {
+  const grid = makeGrid();
+
+  // موقعیت گوشه‌های حصار بر اساس اندازه grid
+  // grid بعد از چیدمان isometric:
+  // عرض کل = COLS * TILE_W
+  // ارتفاع کل = (ROWS + COLS) * TILE_H / 2
+
+  // پست‌های حصارگاه در ۴ گوشه + وسط
+  // گوشه شمال غربی (بالا - جلو)
+  const halfW = (COLS * (TILE_W + GAP)) / 2;
+  const halfH = ((ROWS + COLS) * (TILE_H + GAP)) / 4;
+
   return (
-    <div className="px-2 mt-2">
+    <div className="relative mx-auto my-2 px-2">
       <div
-        className="relative rounded-2xl overflow-hidden border-2 border-[#5a3f20]"
-        style={{ boxShadow: "0 4px 0 rgba(0,0,0,0.35)" }}
+        className="relative"
+        style={{
+          width: halfW * 2 + 60,
+          height: halfH * 2 + 80,
+          margin: "0 auto",
+        }}
       >
-        <div className="relative h-[240px]">
-          {/* منظره پس‌زمینه (SVG) */}
-          <svg
-            viewBox="0 0 360 240"
-            preserveAspectRatio="xMidYMid slice"
-            className="absolute inset-0 w-full h-full"
-          >
-            <defs>
-              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#bfe6f5" />
-                <stop offset="1" stopColor="#e6f3da" />
-              </linearGradient>
-            </defs>
-            {/* آسمان */}
-            <rect x="0" y="0" width="360" height="118" fill="url(#sky)" />
-            {/* ابرها */}
-            <g fill="#ffffff" opacity="0.9">
-              <ellipse cx="70" cy="30" rx="22" ry="11" />
-              <ellipse cx="90" cy="34" rx="16" ry="9" />
-              <ellipse cx="270" cy="24" rx="20" ry="10" />
-              <ellipse cx="292" cy="28" rx="14" ry="8" />
-            </g>
-            {/* تپه‌های دور */}
-            <path d="M0 118c60-30 120-26 180-6s120 12 180-10v30H0z" fill="#a9d178" />
-            <path d="M0 126c80-20 140-6 210 6s110 6 150-10v26H0z" fill="#8fc35f" />
-            {/* زمین */}
-            <rect x="0" y="112" width="360" height="128" fill="#8ec457" />
-            <rect x="0" y="112" width="360" height="128" fill="url(#sky)" opacity="0" />
-            {/* رودخانه */}
-            <path d="M-10 150C40 142 30 182 70 192S60 244 40 252H-20z" fill="#6cc0e6" stroke="#4fa7d6" strokeWidth="2" />
-            <path d="M4 160c18-4 16 16 32 24" stroke="#bfe8f7" strokeWidth="2" fill="none" opacity="0.7" />
-            {/* مزرعه شخم‌خورده */}
-            <g>
-              <path d="M148 152h104l16 40H150z" fill="#c79a54" stroke="#a5793a" strokeWidth="1.5" strokeLinejoin="round" />
-              <path d="M153 160l100 0M157 170l102 0M161 180l104 0" stroke="#a5793a" strokeWidth="1.2" opacity="0.6" />
-              <g fill="#7cae3c">
-                {Array.from({ length: 5 }).map((_, r) =>
-                  Array.from({ length: 11 }).map((_, c) => (
-                    <circle key={`${r}-${c}`} cx={160 + c * 9} cy={160 + r * 6} r="2" />
-                  ))
-                )}
-              </g>
-            </g>
-            {/* مسیر خاکی */}
-            <path d="M110 240c8-36 34-52 34-84" stroke="#d3b072" strokeWidth="11" fill="none" opacity="0.7" strokeLinecap="round" />
-          </svg>
+        {/* ===== زیرcyt: سایه نرم زیر زمین ===== */}
+        <div
+          className="absolute"
+          style={{
+            top: "50%",
+            left: "50%",
+            width: halfW * 1.6,
+            height: halfH * 1.4,
+            transform: "translate(-50%, -45%)",
+            background:
+              "radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, transparent 70%)",
+            filter: "blur(6px)",
+          }}
+        />
 
-          {/* عناصر رنگی روی صحنه */}
-          <div className="absolute" style={{ top: 4, right: 8 }}><Tree size={52} /></div>
-          <div className="absolute" style={{ top: 22, right: 52 }}><PineTree size={40} /></div>
-          <div className="absolute" style={{ top: 8, left: 84 }}><Tree size={40} /></div>
+        {/* ===== زمین زیرین سبز (چمن) ===== */}
+        <div
+          className="absolute"
+          style={{
+            top: "50%",
+            left: "50%",
+            width: halfW * 1.8,
+            height: halfH * 1.6,
+            transform: "translate(-50%, -50%)",
+            background:
+              "radial-gradient(ellipse at center, #9bd36a 0%, #7fb04a 60%, #5e8e30 100%)",
+            borderRadius: "50%",
+            boxShadow: "inset 0 0 20px rgba(0,0,0,0.2)",
+          }}
+        />
 
-          {/* خانه مزرعه */}
-          <div className="absolute" style={{ top: 40, left: 14 }}><House size={86} /></div>
+        {/* ===== ردیف‌های زمین ===== */}
+        {grid.map((row, ri) =>
+          row.map((tile, ci) => (
+            <FarmTileDiamond
+              key={`${ri}-${ci}`}
+              row={ri}
+              col={ci}
+              state={tile.state}
+            />
+          ))
+        )}
 
-          {/* تراکتور کنار مزرعه */}
-          <div className="absolute" style={{ top: 96, left: "50%", transform: "translateX(-58%)" }}>
-            <Tractor size={66} />
-          </div>
+        {/* ===== حصار چوبی: پست‌های گوشه ===== */}
+        {/* بالا (بعد) */}
+        <FencePost x={0} y={-halfH - 4} />
+        <FencePost x={-halfW - 6} y={-halfH + halfW / 2 - 4} />
+        <FencePost x={halfW + 6} y={-halfH + halfW / 2 - 4} />
+        {/* پایین (جلو) */}
+        <FencePost x={0} y={halfH - 4} />
+        <FencePost x={-halfW - 6} y={halfH - halfW / 2 - 4} />
+        <FencePost x={halfW + 6} y={halfH - halfW / 2 - 4} />
 
-          {/* گندم کنار مزرعه */}
-          <div className="absolute" style={{ top: 150, right: 96 }}><Wheat size={30} /></div>
-
-          {/* حیوانات */}
-          <div className="absolute" style={{ bottom: 30, left: 40 }}><Cow size={56} /></div>
-          <div className="absolute" style={{ bottom: 8, left: 100 }}><Cow size={46} /></div>
-          <div className="absolute" style={{ bottom: 26, right: 52 }}><Sheep size={46} /></div>
-          <div className="absolute" style={{ bottom: 6, right: 100 }}><Sheep size={38} /></div>
-
-          {/* تابلوی زمین شما */}
-          <div className="absolute" style={{ bottom: 8, left: 8 }}>
-            <div className="relative flex flex-col items-center">
-              <div
-                className="px-2.5 py-1 rounded-md text-center leading-tight"
-                style={{
-                  background: "linear-gradient(180deg,#d3a55c,#a5762f)",
-                  border: "2px solid #6e491f",
-                  boxShadow: "0 2px 0 rgba(0,0,0,0.3)",
-                }}
-              >
-                <div className="text-[9px] font-black text-[#3a2410]">زمین شما</div>
-                <div className="text-[8px] font-bold text-[#5a3a15]">قطعه ۱</div>
-              </div>
-              <div className="w-1.5 h-3 bg-[#7a5423]" />
-            </div>
-          </div>
-
-          {/* دکمه نقشه */}
-          <button
-            aria-label="نقشه"
-            className="absolute flex items-center justify-center"
-            style={{
-              bottom: 10, right: 10, width: 48, height: 48, borderRadius: 9999,
-              background: "linear-gradient(180deg,#ffd94f,#e6a11f)",
-              border: "3px solid #fff3cf", boxShadow: "0 3px 0 #b47b12",
-            }}
-          >
-            <MapIcon size={28} />
-          </button>
-        </div>
+        {/* ===== چوب‌های افقی حصار (شمال - شرق - غرب - جنوب) ===== */}
+        <FenceRail
+          x={-halfW / 2 - 3}
+          y={-halfH - 4}
+          w={halfW}
+          rot={-26.57}
+        />
+        <FenceRail
+          x={halfW / 2 + 3}
+          y={-halfH - 4}
+          w={halfW}
+          rot={26.57}
+        />
+        <FenceRail
+          x={-halfW / 2 - 3}
+          y={halfH - 4}
+          w={halfW}
+          rot={26.57}
+        />
+        <FenceRail
+          x={halfW / 2 + 3}
+          y={halfH - 4}
+          w={halfW}
+          rot={-26.57}
+        />
       </div>
     </div>
   );
