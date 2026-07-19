@@ -1,31 +1,40 @@
 "use client";
 
 import TopBar from "@/components/TopBar";
-import FarmScene from "@/components/FarmScene";
-import SideButtons from "@/components/SideButtons";
-import SeedPanel from "@/components/SeedPanel";
+import FarmField from "@/components/FarmField";
+import SideDock, { DockItem } from "@/components/SideDock";
+import PlantAllButton from "@/components/PlantAllButton";
+import SeedShop from "@/components/SeedShop";
 import BottomNav from "@/components/BottomNav";
+
+const leftDock: DockItem[] = [
+  { key: "shop", label: "Shop", icon: "shop.png", badge: true },
+  { key: "upgrades", label: "Upgrades", icon: "upgrades.png", badge: true },
+  { key: "seeds", label: "Seeds", icon: "seeds.png" },
+  { key: "storage", label: "Storage", icon: "storage.png" },
+];
+
+const rightDock: DockItem[] = [
+  { key: "daily", label: "Daily", icon: "daily.png" },
+  { key: "achievements", label: "Achievements", icon: "achievements.png" },
+  { key: "tasks", label: "Tasks", icon: "tasks.png" },
+  { key: "settings", label: "Settings", icon: "settings.png" },
+];
 
 export default function Home() {
   return (
-    <main className="game-bg mx-auto max-w-md min-h-screen min-h-dvh flex flex-col relative overflow-hidden">
-      {/* ===== Header ===== */}
+    <main className="game-screen mx-auto max-w-md min-h-screen min-h-dvh flex flex-col overflow-hidden">
       <TopBar />
 
-      {/* ===== Body - شامل صحنه مزرعه + دکمه‌های کناری ===== */}
-      <div className="flex-1 relative flex flex-col min-h-0">
-        {/* صحنه مزرعه - 5x6 ایزومتریک */}
-        <div className="flex-1 flex items-center justify-center min-h-0 relative">
-          <FarmScene />
-          {/* دکمه‌های شناور کناری */}
-          <SideButtons />
-        </div>
-
-        {/* پنل پایین - بذرها */}
-        <SeedPanel />
+      {/* Middle scene: farm field + floating side docks */}
+      <div className="relative flex-1 min-h-0">
+        <FarmField />
+        <SideDock side="left" items={leftDock} />
+        <SideDock side="right" items={rightDock} />
       </div>
 
-      {/* ===== Bottom Navigation ===== */}
+      <PlantAllButton />
+      <SeedShop />
       <BottomNav />
     </main>
   );

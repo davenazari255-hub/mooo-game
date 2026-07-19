@@ -1,120 +1,88 @@
 "use client";
 
-import { useState } from "react";
-import { CoinIcon, GemIcon } from "./Icons";
+import AssetSlot from "./AssetSlot";
 
-type StatChipProps = {
+function PlusButton() {
+  return (
+    <button
+      aria-label="add"
+      className="btn-plus flex items-center justify-center rounded-lg shrink-0"
+      style={{ width: 28, height: 28, fontSize: 20, lineHeight: 1, paddingBottom: 2 }}
+    >
+      +
+    </button>
+  );
+}
+
+/** Coin / Gem resource chip with a "+" button on the trailing edge. */
+function ResourceChip({
+  icon,
+  value,
+}: {
   icon: React.ReactNode;
   value: string;
-  onPlus?: boolean;
-};
-
-function StatChip({ icon, value, onPlus }: StatChipProps) {
+}) {
   return (
-    <div className="stat-chip flex items-center gap-1.5 rounded-full pr-2 pl-1 py-0.5 min-w-0 flex-1">
+    <div className="pill-dark flex items-center gap-1.5 rounded-full pl-1 pr-1 py-1">
       {icon}
-      <span className="text-[12px] font-extrabold text-[#ffe9a8] truncate flex-1">
+      <span className="text-white font-extrabold text-[15px] tabular-nums px-0.5">
         {value}
       </span>
-      {onPlus && (
-        <button
-          aria-label="افزودن"
-          className="inline-flex items-center justify-center w-5 h-5 rounded-full text-white font-black shrink-0"
-          style={{
-            background: "linear-gradient(180deg,#86c93f,#4e8a24)",
-            border: "1px solid #3f6d18",
-            boxShadow: "0 1px 0 #3f6d18",
-            fontSize: 12,
-            lineHeight: 1,
-          }}
-        >
-          +
-        </button>
-      )}
+      <PlusButton />
     </div>
   );
 }
 
 export default function TopBar() {
-  const [level, setLevel] = useState<number>(12);
+  const level = 8;
   const xp = 720;
   const xpMax = 1200;
 
   return (
-    <div className="sticky top-0 z-40 px-2 pt-2 pb-1.5">
-      {/* ردیف اول: ستاره + لول + تنظیمات */}
-      <div className="flex items-center gap-1.5">
-        {/* ستاره/لول با XP */}
-        <div className="stat-chip flex items-center gap-2 rounded-full pl-2 pr-1.5 py-1 flex-1 min-w-0">
-          {/* آیکون ستاره */}
-          <div
-            className="relative w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
-            style={{
-              background: "radial-gradient(circle at 35% 30%, #fff5a0 0%, #ffc832 60%, #d69012 100%)",
-              border: "2px solid #7a4d10",
-              boxShadow: "0 2px 3px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.6)",
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <path
-                d="M12 2.5l2.7 6 6.5.6-4.9 4.3 1.5 6.4L12 16.7 6.2 19.8l1.5-6.4L2.8 9.1l6.5-.6z"
-                fill="#fff7c4"
-                stroke="#9c5e16"
-                strokeWidth="1.2"
-                strokeLinejoin="round"
+    <div className="px-3 pt-3 pb-1">
+      <div className="flex items-center gap-2">
+        {/* Coins */}
+        <ResourceChip
+          icon={<AssetSlot src="coin.png" size={26} rounded={999} label="coin" />}
+          value="25,430"
+        />
+
+        {/* Gems */}
+        <ResourceChip
+          icon={<AssetSlot src="gem.png" size={26} rounded={999} label="gem" />}
+          value="120"
+        />
+
+        {/* Level + XP */}
+        <div className="pill-dark flex items-center gap-2 rounded-full pl-1 pr-3 py-1 flex-1 min-w-0">
+          <AssetSlot src="star.png" size={30} rounded={999} label="lvl" />
+          <span className="text-white font-extrabold text-[15px] shrink-0">
+            {level}
+          </span>
+          <div className="flex-1 min-w-0">
+            <div className="xp-track h-3 rounded-full overflow-hidden relative">
+              <div
+                className="xp-fill h-full rounded-full"
+                style={{ width: `${(xp / xpMax) * 100}%` }}
               />
-            </svg>
-          </div>
-          {/* لول + XP */}
-          <div className="flex flex-col min-w-0 flex-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black text-[#ffd94f]">LV {level}</span>
-              <span className="text-[8px] text-[#c9b689] font-bold">
+              <span
+                className="absolute inset-0 flex items-center justify-center text-white font-bold"
+                style={{ fontSize: 9, textShadow: "0 1px 1px rgba(0,0,0,0.6)" }}
+              >
                 {xp}/{xpMax}
               </span>
-            </div>
-            <div className="xp-track h-1.5 rounded-full overflow-hidden mt-0.5">
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${(xp / xpMax) * 100}%`,
-                  background: "linear-gradient(180deg,#8fe04f,#4e9a24)",
-                }}
-              />
             </div>
           </div>
         </div>
 
-        {/* دکمه تنظیمات */}
+        {/* Settings */}
         <button
-          aria-label="تنظیمات"
-          className="stat-chip w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+          aria-label="settings"
+          className="pill-dark rounded-full flex items-center justify-center shrink-0"
+          style={{ width: 42, height: 42 }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="3" stroke="#ffe9a8" strokeWidth="2" />
-            <path
-              d="M12 1.5l1.5 3.2 3.5-.6-1 3.4 3 2-2.5 2.5 1.5 3.2-3.5.4-.8 3.4-2.7-2.2-2.7 2.2-.8-3.4-3.5-.4 1.5-3.2L6.5 7.1l3-2-1-3.4 3.5.6z"
-              fill="#ffe9a8"
-              stroke="#5a3a08"
-              strokeWidth="1"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <AssetSlot src="settings.png" size={26} rounded={999} label="set" />
         </button>
-      </div>
-
-      {/* ردیف دوم: سکه + الماس */}
-      <div className="flex items-center gap-1.5 mt-1.5">
-        <StatChip
-          icon={<CoinIcon size={22} />}
-          value="۱۲۵K"
-          onPlus
-        />
-        <StatChip
-          icon={<GemIcon size={20} />}
-          value="۸۵۰"
-          onPlus
-        />
       </div>
     </div>
   );
