@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CoinIcon, ClockIcon } from "./Icons";
+import { Art } from "./Art";
 
 type Seed = {
   id: string;
@@ -9,15 +10,15 @@ type Seed = {
   price: number;
   growTime: string; // نمایش زمان
   yieldAmount: number; // سود
-  color: string; // رنگ میوه
+  art: string; // نام وکتور میوه در public/art
 };
 
 const allSeeds: Seed[] = [
-  { id: "apple", name: "سیب", price: 100, growTime: "۲ دقیقه", yieldAmount: 180, color: "#d92b2b" },
-  { id: "orange", name: "پرتقال", price: 150, growTime: "۵ دقیقه", yieldAmount: 280, color: "#ff8a3c" },
-  { id: "mango", name: "انبه", price: 220, growTime: "۱۰ دقیقه", yieldAmount: 420, color: "#ffc832" },
-  { id: "cherry", name: "گیلاس", price: 300, growTime: "۲۰ دقیقه", yieldAmount: 600, color: "#c8122d" },
-  { id: "plum", name: "آلو", price: 400, growTime: "۳۰ دقیقه", yieldAmount: 850, color: "#7a2d8a" },
+  { id: "apple", name: "سیب", price: 100, growTime: "۲ دقیقه", yieldAmount: 180, art: "apple" },
+  { id: "orange", name: "پرتقال", price: 150, growTime: "۵ دقیقه", yieldAmount: 280, art: "orange" },
+  { id: "mango", name: "انبه", price: 220, growTime: "۱۰ دقیقه", yieldAmount: 420, art: "mango" },
+  { id: "cherry", name: "گیلاس", price: 300, growTime: "۲۰ دقیقه", yieldAmount: 600, art: "cherry" },
+  { id: "plum", name: "آلو", price: 400, growTime: "۳۰ دقیقه", yieldAmount: 850, art: "plum" },
 ];
 
 const tabs = [
@@ -27,40 +28,12 @@ const tabs = [
   { id: "special", label: "ویژه" },
 ];
 
-// آیکون میوه کوچک داخل کارت
-function FruitIcon({ size = 28, color = "#d92b2b" }: { size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      {/* بدنه میوه */}
-      <circle cx="16" cy="18" r="9" fill={color} stroke="#5a2a08" strokeWidth="1.3" />
-      {/* براق بالا */}
-      <ellipse cx="13" cy="14" rx="2.2" ry="1.6" fill="#fff" opacity="0.5" />
-      {/* ساقه */}
-      <path
-        d="M16 9c-1-2 1-4 3-3"
-        stroke="#5a3a08"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* برگ */}
-      <path
-        d="M16 9c1-2 4-2 5-1-1 2-4 2-5 1z"
-        fill="#86c93f"
-        stroke="#487d1c"
-        strokeWidth="1"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function SeedCard({ seed }: { seed: Seed }) {
   return (
     <div className="seed-card flex flex-col items-center px-1.5 py-2 min-w-[68px]">
       {/* آیکون میوه */}
       <div className="mb-1">
-        <FruitIcon size={32} color={seed.color} />
+        <Art name={seed.art} size={34} alt={seed.name} />
       </div>
       {/* نام */}
       <span className="text-[10px] font-black text-[#5a3a08] mb-1">{seed.name}</span>

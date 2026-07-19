@@ -1,171 +1,194 @@
 "use client";
 
 /**
- * Farm Grid - زمین کشاورزی 5x6 Isometric
- * زمین‌های خالی آماده کشت با حصار چوبی اطراف
+ * FarmScene - زمین کشاورزی با حصار چوبی
+ * شبکهٔ ۵×۶ از زمین‌های خاکی گِرد، با حصار مستطیلی چوبی دور آن.
+ * برخی زمین‌ها محصول کاشته‌شده دارند و اطراف زمین حیوانات می‌چرند.
  */
 
-type TileState = "empty" | "tilled" | "planted";
-
-type FarmTile = {
-  state: TileState;
-  // اگه planted باشه، یک Sprite کوچک از درخت/نهال
-  stage?: number;
-};
+import { Art } from "./Art";
 
 const COLS = 5;
 const ROWS = 6;
 
-// ابعاد یک تایل الماسی (isometric)
-const TILE_W = 64;
-const TILE_H = 32;
-// فاصله بین تایل‌ها
-const GAP = 2;
-// حد کلی خاک
-const SOIL_W = TILE_W - 4;
-const SOIL_H = TILE_H - 2;
+// ابعاد هر زمین خاکی و فاصله بین آن‌ها
+const TILE_W = 46;
+const TILE_H = 42;
+const GAP = 8;
+
+// ابعاد شبکه و حصار
+const GRID_W = COLS * TILE_W + (COLS - 1) * GAP;
+const GRID_H = ROWS * TILE_H + (ROWS - 1) * GAP;
+const FENCE_PAD = 14;
+const FENCE_W = GRID_W + FENCE_PAD * 2;
+const FENCE_H = GRID_H + FENCE_PAD * 2;
+
+// ابعاد کل صحنه (فضای اضافه برای حیوانات و درختان اطراف)
+const SCENE_W = FENCE_W + 70;
+const SCENE_H = FENCE_H + 120;
+
+type FarmTile = {
+  planted: boolean;
+  crop?: string;
+  cropSize?: number;
+};
+
+// محصولاتِ کاشته‌شده روی زمین‌ها؛ کلید = "row-col"
+// ردیف‌های بالا مراحل رشد را نشان می‌دهند: نهال → سبزه → محصول رسیده → درخت میوه
+const PLANTED: Record<string, { crop: string; cropSize?: number }> = {
+  "0-0": { crop: "sprout", cropSize: 24 },
+  "0-1": { crop: "herb", cropSize: 28 },
+  "0-2": { crop: "wheat", cropSize: 32 },
+  "0-3": { crop: "corn", cropSize: 34 },
+  "0-4": { crop: "tree", cropSize: 42 },
+  "1-0": { crop: "carrot", cropSize: 28 },
+  "1-1": { crop: "tomato", cropSize: 30 },
+  "1-3": { crop: "strawberry", cropSize: 28 },
+  "1-4": { crop: "sprout", cropSize: 24 },
+  "2-2": { crop: "herb", cropSize: 28 },
+};
 
 function makeGrid(): FarmTile[][] {
   const grid: FarmTile[][] = [];
   for (let r = 0; r < ROWS; r++) {
     const row: FarmTile[] = [];
     for (let c = 0; c < COLS; c++) {
-      row.push({ state: "empty" });
+      const planted = PLANTED[`${r}-${c}`];
+      row.push(
+        planted
+          ? { planted: true, crop: planted.crop, cropSize: planted.cropSize }
+          : { planted: false }
+      );
     }
     grid.push(row);
   }
   return grid;
 }
 
-/**
- * یک تایل الماسی خالی - توی عکس، زمین‌ها به شکل لوزی سبز/قهوه‌ای هستند
- */
-function FarmTileDiamond({
-  row,
-  col,
-  state,
-}: {
-  row: number;
-  col: number;
-  state: TileState;
-}) {
-  // موقعیت ایزومتریک
-  const x = (col - (COLS - 1) / 2) * (TILE_W + GAP);
-  // ردیف‌های پایینی جلوترن (پایین‌تر)
-  const yIso = (row - (ROWS - 1) / 2) * ((TILE_H + GAP) / 2);
-  const xIso = -((col - (COLS - 1) / 2) * ((TILE_W + GAP) / 2));
-  // جابجایی برای عمق ایزومتریک
-  const top = yIso - xIso / 2;
-  const left = x / 2 + xIso / 2;
-
+/** یک زمین خاکی گِرد؛ اگر محصول داشته باشد آن را عمود روی خاک نشان می‌دهد */
+function SoilTile({ tile }: { tile: FarmTile }) {
   return (
     <div
-      className="absolute"
+      className="relative"
       style={{
-        top: `calc(50% + ${top}px)`,
-        left: `calc(50% + ${left}px)`,
         width: TILE_W,
         height: TILE_H,
-        transform: "translate(-50%, -50%)",
+        borderRadius: 10,
+        background: tile.planted
+          ? "linear-gradient(160deg, #6e4a28 0%, #4f3319 100%)"
+          : "linear-gradient(160deg, #855b32 0%, #5a3c20 100%)",
+        border: "2px solid #402710",
+        boxShadow:
+          "inset 0 3px 5px rgba(0,0,0,0.35), inset 0 -2px 2px rgba(255,255,255,0.08), 0 2px 0 rgba(0,0,0,0.35)",
       }}
     >
-      {/* لوزی خاک - با چرخش 45 درجه */}
+      {/* شیارهای خاک */}
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          transform: "rotateX(60deg) rotateZ(-45deg)",
-          transformStyle: "preserve-3d",
+          inset: 4,
+          borderRadius: 7,
+          backgroundImage:
+            "repeating-linear-gradient(90deg, rgba(0,0,0,0.18) 0 2px, transparent 2px 9px)",
         }}
-      >
+      />
+      {/* محصول */}
+      {tile.crop && (
         <div
+          className="absolute left-1/2"
           style={{
-            width: SOIL_W,
-            height: SOIL_H,
-            margin: "auto",
-            // ===== زمین خالی: طوسی-قهوه‌ای تیره =====
-            background:
-              state === "empty"
-                ? "linear-gradient(135deg, #6b4e2d 0%, #4d3520 100%)"
-                : state === "tilled"
-                ? "linear-gradient(135deg, #8a5a2e 0%, #5e3c1c 100%)"
-                : "linear-gradient(135deg, #7a5a3a 0%, #5e4022 100%)",
-            border: "1.5px solid #3a2510",
-            boxShadow:
-              "inset 0 1px 2px rgba(255,255,255,0.15), 0 1px 0 rgba(0,0,0,0.4)",
-            // الگوی خاک
-            backgroundImage:
-              state === "empty"
-                ? `repeating-linear-gradient(45deg, #3a2510 0 2px, transparent 2px 8px)`
-                : undefined,
+            bottom: "22%",
+            transform: "translateX(-50%)",
+            filter: "drop-shadow(0 2px 1px rgba(0,0,0,0.3))",
           }}
-        />
-      </div>
+        >
+          <Art name={tile.crop} size={tile.cropSize ?? 26} />
+        </div>
+      )}
     </div>
   );
 }
 
-/**
- * پست‌های چوبی حصار - در هر گوشه
- */
+/** پست چوبی حصار */
 function FencePost({ x, y }: { x: number; y: number }) {
   return (
     <div
       className="absolute"
       style={{
-        top: `calc(50% + ${y}px)`,
         left: `calc(50% + ${x}px)`,
-        transform: "translate(-50%, -100%)",
+        top: `calc(50% + ${y}px)`,
+        transform: "translate(-50%, -50%)",
+        width: 9,
+        height: 20,
+        borderRadius: 3,
+        background: "linear-gradient(180deg, #c58f52 0%, #6e4a24 100%)",
+        border: "1.5px solid #3f2912",
+        boxShadow: "0 2px 2px rgba(0,0,0,0.4)",
+        zIndex: 6,
       }}
-    >
-      <div
-        style={{
-          width: 6,
-          height: 14,
-          background: "linear-gradient(180deg, #b07e45 0%, #6e4a24 100%)",
-          border: "1px solid #3f2912",
-          borderRadius: 2,
-          boxShadow: "0 2px 2px rgba(0,0,0,0.4)",
-        }}
-      />
-    </div>
+    />
   );
 }
 
-/**
- * چوب‌های افقی حصار - بین پست‌ها
- */
+/** ریلِ افقی یا عمودی حصار */
 function FenceRail({
   x,
   y,
-  w,
-  rot = 0,
+  len,
+  vertical = false,
 }: {
   x: number;
   y: number;
-  w: number;
-  rot?: number;
+  len: number;
+  vertical?: boolean;
 }) {
   return (
     <div
       className="absolute"
       style={{
-        top: `calc(50% + ${y}px)`,
         left: `calc(50% + ${x}px)`,
-        transform: `translate(-50%, -100%) rotate(${rot}deg)`,
-        transformOrigin: "center bottom",
+        top: `calc(50% + ${y}px)`,
+        transform: "translate(-50%, -50%)",
+        width: vertical ? 6 : len,
+        height: vertical ? len : 6,
+        borderRadius: 3,
+        background: vertical
+          ? "linear-gradient(90deg, #b07e45 0%, #7a5230 100%)"
+          : "linear-gradient(180deg, #c08a4e 0%, #7a5230 100%)",
+        border: "1px solid #3f2912",
+        boxShadow: "0 1px 1px rgba(0,0,0,0.35)",
+        zIndex: 5,
+      }}
+    />
+  );
+}
+
+/** حیوان یا ساکن مزرعه که روی چمن اطراف زمین است */
+function Animal({
+  art,
+  x,
+  y,
+  size,
+  flip = false,
+}: {
+  art: string;
+  x: number;
+  y: number;
+  size: number;
+  flip?: boolean;
+}) {
+  return (
+    <div
+      className="absolute"
+      style={{
+        left: `calc(50% + ${x}px)`,
+        top: `calc(50% + ${y}px)`,
+        transform: `translate(-50%, -100%) ${flip ? "scaleX(-1)" : ""}`,
+        zIndex: 8,
+        filter: "drop-shadow(0 3px 2px rgba(0,0,0,0.3))",
       }}
     >
-      <div
-        style={{
-          width: w,
-          height: 4,
-          background: "linear-gradient(180deg, #b07e45 0%, #6e4a24 100%)",
-          border: "1px solid #3f2912",
-          borderRadius: 2,
-          boxShadow: "0 1px 1px rgba(0,0,0,0.4)",
-        }}
-      />
+      <Art name={art} size={size} />
     </div>
   );
 }
@@ -173,105 +196,94 @@ function FenceRail({
 export default function FarmScene() {
   const grid = makeGrid();
 
-  // موقعیت گوشه‌های حصار بر اساس اندازه grid
-  // grid بعد از چیدمان isometric:
-  // عرض کل = COLS * TILE_W
-  // ارتفاع کل = (ROWS + COLS) * TILE_H / 2
-
-  // پست‌های حصارگاه در ۴ گوشه + وسط
-  // گوشه شمال غربی (بالا - جلو)
-  const halfW = (COLS * (TILE_W + GAP)) / 2;
-  const halfH = ((ROWS + COLS) * (TILE_H + GAP)) / 4;
+  // موقعیت پست‌های حصار: چهار گوشه + میانهٔ هر ضلع
+  const hx = FENCE_W / 2;
+  const hy = FENCE_H / 2;
+  const posts: { x: number; y: number }[] = [
+    { x: -hx, y: -hy },
+    { x: 0, y: -hy },
+    { x: hx, y: -hy },
+    { x: -hx, y: 0 },
+    { x: hx, y: 0 },
+    { x: -hx, y: hy },
+    { x: 0, y: hy },
+    { x: hx, y: hy },
+  ];
 
   return (
-    <div className="relative mx-auto my-2 px-2">
+    <div className="relative mx-auto my-1" style={{ width: SCENE_W, height: SCENE_H }}>
+      {/* سایهٔ نرم زیر زمین */}
       <div
-        className="relative"
+        className="absolute"
         style={{
-          width: halfW * 2 + 60,
-          height: halfH * 2 + 80,
-          margin: "0 auto",
+          left: "50%",
+          top: "50%",
+          width: FENCE_W + 40,
+          height: FENCE_H + 30,
+          transform: "translate(-50%, -46%)",
+          background:
+            "radial-gradient(ellipse at center, rgba(0,0,0,0.22) 0%, transparent 70%)",
+          filter: "blur(6px)",
+        }}
+      />
+
+      {/* پد چمنیِ زیر زمین */}
+      <div
+        className="absolute"
+        style={{
+          left: "50%",
+          top: "50%",
+          width: FENCE_W + 44,
+          height: FENCE_H + 34,
+          transform: "translate(-50%, -50%)",
+          borderRadius: 28,
+          background:
+            "radial-gradient(ellipse at 50% 40%, #9bd36a 0%, #7fb04a 55%, #629233 100%)",
+          boxShadow: "inset 0 0 22px rgba(0,0,0,0.18)",
+        }}
+      />
+
+      {/* شبکهٔ زمین‌های خاکی */}
+      <div
+        className="absolute"
+        style={{
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          display: "grid",
+          gridTemplateColumns: `repeat(${COLS}, ${TILE_W}px)`,
+          gridAutoRows: `${TILE_H}px`,
+          gap: GAP,
+          zIndex: 2,
         }}
       >
-        {/* ===== زیرcyt: سایه نرم زیر زمین ===== */}
-        <div
-          className="absolute"
-          style={{
-            top: "50%",
-            left: "50%",
-            width: halfW * 1.6,
-            height: halfH * 1.4,
-            transform: "translate(-50%, -45%)",
-            background:
-              "radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, transparent 70%)",
-            filter: "blur(6px)",
-          }}
-        />
-
-        {/* ===== زمین زیرین سبز (چمن) ===== */}
-        <div
-          className="absolute"
-          style={{
-            top: "50%",
-            left: "50%",
-            width: halfW * 1.8,
-            height: halfH * 1.6,
-            transform: "translate(-50%, -50%)",
-            background:
-              "radial-gradient(ellipse at center, #9bd36a 0%, #7fb04a 60%, #5e8e30 100%)",
-            borderRadius: "50%",
-            boxShadow: "inset 0 0 20px rgba(0,0,0,0.2)",
-          }}
-        />
-
-        {/* ===== ردیف‌های زمین ===== */}
         {grid.map((row, ri) =>
-          row.map((tile, ci) => (
-            <FarmTileDiamond
-              key={`${ri}-${ci}`}
-              row={ri}
-              col={ci}
-              state={tile.state}
-            />
-          ))
+          row.map((tile, ci) => <SoilTile key={`${ri}-${ci}`} tile={tile} />)
         )}
-
-        {/* ===== حصار چوبی: پست‌های گوشه ===== */}
-        {/* بالا (بعد) */}
-        <FencePost x={0} y={-halfH - 4} />
-        <FencePost x={-halfW - 6} y={-halfH + halfW / 2 - 4} />
-        <FencePost x={halfW + 6} y={-halfH + halfW / 2 - 4} />
-        {/* پایین (جلو) */}
-        <FencePost x={0} y={halfH - 4} />
-        <FencePost x={-halfW - 6} y={halfH - halfW / 2 - 4} />
-        <FencePost x={halfW + 6} y={halfH - halfW / 2 - 4} />
-
-        {/* ===== چوب‌های افقی حصار (شمال - شرق - غرب - جنوب) ===== */}
-        <FenceRail
-          x={-halfW / 2 - 3}
-          y={-halfH - 4}
-          w={halfW}
-          rot={-26.57}
-        />
-        <FenceRail
-          x={halfW / 2 + 3}
-          y={-halfH - 4}
-          w={halfW}
-          rot={26.57}
-        />
-        <FenceRail
-          x={-halfW / 2 - 3}
-          y={halfH - 4}
-          w={halfW}
-          rot={26.57}
-        />
-        <FenceRail
-          x={halfW / 2 + 3}
-          y={halfH - 4}
-          w={halfW}
-          rot={-26.57}
-        />
       </div>
+
+      {/* ریل‌های حصار: بالا، پایین، چپ، راست */}
+      <FenceRail x={0} y={-hy} len={FENCE_W} />
+      <FenceRail x={0} y={hy} len={FENCE_W} />
+      <FenceRail x={-hx} y={0} len={FENCE_H} vertical />
+      <FenceRail x={hx} y={0} len={FENCE_H} vertical />
+
+      {/* پست‌های حصار */}
+      {posts.map((p, i) => (
+        <FencePost key={i} x={p.x} y={p.y} />
+      ))}
+
+      {/* ===== ساکنان مزرعه: روی چمن اطراف زمین می‌چرند ===== */}
+      {/* گاو - نماد بازی (Mooo) - جلوی زمین */}
+      <Animal art="cow" x={-52} y={hy + 46} size={50} />
+      {/* گوسفند - جلوی زمین سمت راست */}
+      <Animal art="sheep" x={52} y={hy + 52} size={42} flip />
+      {/* خوک - جلوی زمین سمت راست */}
+      <Animal art="pig" x={112} y={hy + 34} size={34} flip />
+      {/* مرغ - لبهٔ راست */}
+      <Animal art="chicken" x={hx + 22} y={-hy + 40} size={26} flip />
+      {/* کشاورز - لبهٔ چپ، مشغول رسیدگی */}
+      <Animal art="farmer" x={-hx - 22} y={-hy + 60} size={44} />
     </div>
   );
 }

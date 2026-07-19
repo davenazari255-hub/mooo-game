@@ -5,10 +5,14 @@ import FarmScene from "@/components/FarmScene";
 import SideButtons from "@/components/SideButtons";
 import SeedPanel from "@/components/SeedPanel";
 import BottomNav from "@/components/BottomNav";
+import SceneDecor from "@/components/SceneDecor";
 
 export default function Home() {
   return (
     <main className="game-bg mx-auto max-w-md min-h-screen min-h-dvh flex flex-col relative overflow-hidden">
+      {/* ===== لایهٔ دکور محیطی (پشت همه) ===== */}
+      <SceneDecor />
+
       {/* ===== Header ===== */}
       <TopBar />
 
