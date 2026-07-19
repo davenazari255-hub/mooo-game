@@ -3,8 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "بازی مزرعه | Mooo Game",
-  description: "مینی‌اپ تلگرامی بازی مزرعه‌داری",
+  title: "Mooo Game — Farm",
+  description: "Telegram farm mini-app — UI design preview",
 };
 
 export const viewport: Viewport = {
@@ -12,7 +12,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#1a1108",
+  themeColor: "#5f9a34",
 };
 
 export default function RootLayout({
@@ -21,14 +21,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="en" dir="ltr">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap"
           rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
         />
       </head>
-      <body className="font-vazir antialiased">
+      <body className="font-game antialiased">
         <Script
           src="https://telegram.org/js/telegram-web-app.js"
           strategy="beforeInteractive"

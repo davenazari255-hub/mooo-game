@@ -3,168 +3,241 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  /* ───── Palette pulled from the reference mock-up ───── */
+  --grass-light: #8dc255;
+  --grass: #6fae3d;
+  --grass-dark: #588f30;
+
+  --wood-dark-1: #322815;
+  --wood-dark-2: #1d1608;
+  --wood-edge: #6d5a2c;
+
+  --wood-panel-1: #6b4a25;
+  --wood-panel-2: #4a3016;
+  --wood-panel-edge: #2f1f0e;
+
+  --cream: #f4e8cb;
+  --cream-2: #e7d3a6;
+
+  --green-1: #8ed24f;
+  --green-2: #57a026;
+  --green-edge: #3f7a1a;
+  --green-shadow: #356414;
+
+  --gold-1: #ffd851;
+  --gold-2: #f0a828;
+  --gold-edge: #b9760f;
+
+  --ink: #4a3417;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
 }
 
 body {
-  background: #6ea84a;
-  color: #fff7dc;
-  font-family: 'Vazirmatn', system-ui, sans-serif;
+  background: var(--grass);
+  color: #fff;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-weight: 700;
 }
 
-/* ───────────────── پس‌زمینه بازی - چمنزار Isometric ───────────────── */
-.game-bg {
-  background:
-    radial-gradient(120% 60% at 50% 0%, #b9e07f 0%, #8ec557 30%, #6fa93f 100%);
+.font-game {
+  font-family: "Baloo 2", system-ui, sans-serif;
+}
+
+/* Hide scrollbars on the horizontal seed rail */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ───────────────────────── Screen backdrop ───────────────────────── */
+.game-screen {
+  background: linear-gradient(
+    180deg,
+    var(--grass-light) 0%,
+    var(--grass) 45%,
+    var(--grass-dark) 100%
+  );
   min-height: 100vh;
   min-height: 100dvh;
-  position: relative;
-  overflow: hidden;
 }
 
-/* اسکرول‌بار مخفی */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* ───────────────────────── Header ───────────────────────── */
-.stat-chip {
-  background: linear-gradient(180deg, rgba(30, 20, 10, 0.92), rgba(18, 12, 6, 0.92));
-  border: 1.5px solid rgba(120, 90, 50, 0.7);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 0 rgba(0,0,0,0.35);
-}
-
-.xp-track {
-  background: rgba(0, 0, 0, 0.45);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-/* ───────────────── بافت پنل چوبی ───────────────── */
-.panel-wood {
-  background:
-    linear-gradient(180deg, #d8a76a 0%, #b07e45 100%);
-  border: 2px solid #6e4a24;
-  border-radius: 16px;
+/* ─────────────────────────── Dark pills ─────────────────────────── */
+/* Used by the resource chips, the settings button and dock buttons.  */
+.pill-dark {
+  background: linear-gradient(180deg, var(--wood-dark-1), var(--wood-dark-2));
+  border: 2px solid var(--wood-edge);
   box-shadow:
-    0 4px 0 0 rgba(0, 0, 0, 0.35),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.25);
-  position: relative;
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.35);
 }
 
-.panel-wood-dark {
-  background: linear-gradient(180deg, #8a5a2e 0%, #5e3c1c 100%);
-  border: 2px solid #3f2912;
-  border-radius: 16px;
-  box-shadow:
-    0 4px 0 0 rgba(0, 0, 0, 0.4),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.15);
+.text-gold {
+  color: #ffe6a0;
 }
 
-/* ───────────────── دکمه‌های سبز ───────────────── */
-.btn-green {
-  background: linear-gradient(180deg, #86c93f 0%, #5a9c27 100%);
-  border: 2px solid #487d1c;
+/* ───────────────────────── Round + button ───────────────────────── */
+.btn-plus {
+  background: linear-gradient(180deg, var(--green-1), var(--green-2));
+  border: 2px solid var(--green-edge);
   color: #fff;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
-  box-shadow: 0 3px 0 0 #3f6d18, inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 0 var(--green-shadow);
+}
+
+/* ───────────────────────────── XP bar ───────────────────────────── */
+.xp-track {
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+.xp-fill {
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* ─────────────────────────── Green button ───────────────────────── */
+.btn-green {
+  background: linear-gradient(180deg, var(--green-1), var(--green-2));
+  border: 2px solid var(--green-edge);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.4),
+    0 4px 0 var(--green-shadow);
   transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
 .btn-green:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 0 #3f6d18;
+  transform: translateY(3px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 1px 0 var(--green-shadow);
 }
 
-/* ───────────────── دکمه طلایی ───────────────── */
-.btn-gold {
-  background: linear-gradient(180deg, #ffd94f 0%, #e6a11f 100%);
-  border: 2px solid #c07f13;
-  color: #5a3a08;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-  box-shadow: 0 3px 0 0 #b47b12, inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
-}
-.btn-gold:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 0 #b47b12;
-}
-
-/* ───────────────── دکمه سبز تیره (شیشه‌ای) ───────────────── */
-.btn-glass-green {
-  background: linear-gradient(180deg, rgba(94, 168, 53, 0.95) 0%, rgba(54, 112, 30, 0.95) 100%);
-  border: 2px solid #2f6b16;
-  color: #fff;
-  box-shadow: 0 3px 0 0 #1f4c10, inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
-}
-.btn-glass-green:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 0 #1f4c10;
-}
-
-/* ───────────────── دکمه آیکونی کناری ───────────────── */
-.icon-btn-side {
-  background: linear-gradient(180deg, #b88a52 0%, #8a5e30 100%);
-  border: 2px solid #5e3f1e;
-  color: #fff7dc;
-  box-shadow: 0 3px 0 0 #3d2a13, inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+/* ───────────────────────── Wood side buttons ────────────────────── */
+.dock-btn {
+  background: linear-gradient(180deg, #3a2e18, #211809);
+  border: 2px solid #6d5a2c;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 3px 0 rgba(0, 0, 0, 0.4);
   transition: transform 0.05s ease;
 }
-.icon-btn-side:active {
+.dock-btn:active {
   transform: translateY(2px);
 }
 
-/* ─────────── notification badge قرمز ─────────── */
+/* Red notification badge */
 .notif-badge {
-  background: linear-gradient(180deg, #ff5252 0%, #c62828 100%);
-  border: 1px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #ff7a6b, #d62b21 70%);
+  border: 2px solid #fff;
   color: #fff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-/* ───────────────── تب‌های پنل ───────────────── */
+/* ─────────────────────────── Wood panel ─────────────────────────── */
+.panel-wood {
+  background: linear-gradient(180deg, var(--wood-panel-1), var(--wood-panel-2));
+  border: 3px solid var(--wood-panel-edge);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Tabs */
 .seed-tab {
-  background: linear-gradient(180deg, rgba(140, 90, 50, 0.5), rgba(90, 60, 30, 0.5));
-  border: 1.5px solid rgba(110, 75, 40, 0.8);
-  color: #d9c89a;
-  transition: all 0.15s ease;
+  color: #d9c294;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.28));
+  border-bottom: 2px solid transparent;
+  transition: all 0.12s ease;
 }
 .seed-tab.active {
-  background: linear-gradient(180deg, #ffd94f 0%, #e6a11f 100%);
-  border-color: #b47b12;
-  color: #5a3a08;
-  box-shadow: 0 2px 0 0 #b47b12, inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  color: #fff8e6;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0));
+  border-bottom: 2px solid var(--gold-2);
 }
 
-/* ──────────────── کارت بذر ──────────────── */
+/* Seed cards */
 .seed-card {
-  background: linear-gradient(180deg, #f4e4c0 0%, #e2c896 100%);
-  border: 2px solid #6e4a24;
-  border-radius: 12px;
-  box-shadow: 0 3px 0 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(180deg, #f7edd4, #e9d5a9);
+  border: 2px solid #b98f52;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.7),
+    0 3px 0 rgba(0, 0, 0, 0.25);
+}
+.seed-price {
+  background: linear-gradient(180deg, var(--green-1), var(--green-2));
+  border: 2px solid var(--green-edge);
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 0 var(--green-shadow);
 }
 
-/* ──────────────── آیتم‌های ناوبری پایین ──────────────── */
+/* ─────────────────────────── Bottom nav ─────────────────────────── */
+.bottom-nav {
+  background: linear-gradient(180deg, #3a2c16, #1c1408);
+  border-top: 3px solid #6d5a2c;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.4);
+}
 .nav-item {
-  color: #c9b689;
-  transition: all 0.15s ease;
+  color: #c9b485;
+  transition: all 0.12s ease;
 }
 .nav-item.active {
-  color: #fff7dc;
-  background: linear-gradient(180deg, #d8854b 0%, #a55a28 60%);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.25), 0 2px 4px rgba(0,0,0,0.3);
+  color: #fff8e6;
+}
+.nav-item.active .nav-pill {
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2));
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.5),
+    0 3px 6px rgba(0, 0, 0, 0.35);
 }
 .nav-item.locked {
-  color: #6e5a3a;
-  opacity: 0.55;
+  color: #7c6a45;
+}
+
+/* ───────────────── Placeholder art slot (no real art yet) ────────── */
+.asset-slot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.06) 0 6px,
+    rgba(255, 255, 255, 0.02) 6px 12px
+  );
+  border: 1.5px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  overflow: hidden;
+}
+/* Light variant for slots that sit on cream cards */
+.asset-slot.on-light {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(90, 60, 20, 0.08) 0 6px,
+    rgba(90, 60, 20, 0.03) 6px 12px
+  );
+  border: 1.5px dashed rgba(120, 85, 40, 0.5);
+  color: rgba(90, 60, 20, 0.55);
+}
+.asset-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
