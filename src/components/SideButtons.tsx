@@ -1,10 +1,3 @@
-"use client";
-
-/**
- * Side buttons - دکمه‌های کناری چپ و راست
- * بدون عملکرد فقط UI (نسخه دمو)
- */
-
 type SideBtn = {
   key: string;
   label: string;
@@ -12,7 +5,6 @@ type SideBtn = {
   badge?: boolean;
 };
 
-// =================== آیکون‌های SVG ===================
 const ShopIcon = ({ size = 18 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <path
@@ -121,7 +113,6 @@ const SettingsIcon = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
-// =================== دکمه تک ===================
 function SideButton({
   btn,
   align,
@@ -138,7 +129,7 @@ function SideButton({
       >
         {btn.icon}
       </button>
-      {/* برچسب زیر دکمه */}
+
       <div
         className="absolute top-full left-1/2 -translate-x-1/2 mt-0.5 whitespace-nowrap text-[7.5px] font-black text-white"
         style={{ textShadow: "0 1px 1px rgba(0,0,0,0.7)" }}
@@ -167,30 +158,29 @@ function SideButton({
 }
 
 const leftButtons: SideBtn[] = [
-  { key: "shop", label: "فروشگاه", icon: <ShopIcon size={18} />, badge: true },
-  { key: "upgrades", label: "ارتقا", icon: <UpgradeIcon size={18} />, badge: true },
-  { key: "seeds", label: "بذرها", icon: <SeedsIcon size={18} /> },
-  { key: "storage", label: "انبار", icon: <StorageIcon size={18} /> },
+  { key: "shop", label: "Shop", icon: <ShopIcon size={18} />, badge: true },
+  { key: "upgrades", label: "Upgrades", icon: <UpgradeIcon size={18} />, badge: true },
+  { key: "seeds", label: "Seeds", icon: <SeedsIcon size={18} /> },
+  { key: "storage", label: "Storage", icon: <StorageIcon size={18} /> },
 ];
 
 const rightButtons: SideBtn[] = [
-  { key: "daily", label: "روزانه", icon: <DailyIcon size={18} /> },
-  { key: "achievements", label: "دستاوردها", icon: <TrophyIcon size={18} /> },
-  { key: "tasks", label: "وظایف", icon: <TasksIcon size={18} /> },
-  { key: "settings", label: "تنظیمات", icon: <SettingsIcon size={18} /> },
+  { key: "daily", label: "Daily", icon: <DailyIcon size={18} /> },
+  { key: "achievements", label: "Achievements", icon: <TrophyIcon size={18} /> },
+  { key: "tasks", label: "Tasks", icon: <TasksIcon size={18} /> },
+  { key: "settings", label: "Settings", icon: <SettingsIcon size={18} /> },
 ];
 
 export default function SideButtons() {
   return (
     <>
-      {/* ===== چپ ===== */}
+
       <div className="absolute left-1 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-3.5">
         {leftButtons.map((b) => (
           <SideButton key={b.key} btn={b} align="left" />
         ))}
       </div>
 
-      {/* ===== راست ===== */}
       <div className="absolute right-1 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-3.5">
         {rightButtons.map((b) => (
           <SideButton key={b.key} btn={b} align="right" />

@@ -1,44 +1,50 @@
-# 🐄 Mooo Game — مینی‌اپ تلگرامی بازی مزرعه
+# Fruit Farm Game
 
-مینی‌اپ تلگرامی بازی مزرعه‌داری با رابط کاربری فارسی (RTL).
+A mobile-first fruit farming game interface built with Next.js. The current version is a frontend prototype: it presents the farm, seed catalog, resource counters, side actions, and bottom navigation without a backend or persistent game state.
 
-این نسخه فعلاً فقط **رابط کاربری پایه (UI base)** است — منطق بازی و بک‌اند در مراحل بعدی اضافه می‌شود.
+## Tech stack
 
-## تکنولوژی‌ها
+- Next.js 16 with the App Router
+- React 19
+- TypeScript
+- Tailwind CSS 3
 
-- **Next.js 14** (App Router)
-- **React 18**
-- **TypeScript**
-- **Tailwind CSS**
-- **Telegram WebApp SDK**
-
-## اجرای محلی
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-سپس مرورگر را روی `http://localhost:3000` باز کنید.
+Open `http://localhost:3000` in a browser.
 
-## ساختار
+## Validation
 
+```bash
+npm run typecheck
+npm run build
 ```
+
+## Project structure
+
+```text
 src/
 ├── app/
-│   ├── layout.tsx      # چیدمان اصلی + بارگذاری SDK تلگرام
-│   ├── page.tsx        # صفحه اصلی بازی
-│   └── globals.css     # استایل‌های سراسری
-├── components/
-│   ├── TopBar.tsx      # نوار بالا (سطح، سکه، جم، انرژی)
-│   ├── InfoCards.tsx   # کارت‌های لیگ/ماموریت/صندوق
-│   ├── FarmScene.tsx   # صحنه مزرعه
-│   ├── BottomNav.tsx   # نویگیشن پایین
-│   └── panels/         # پنل‌های کشتزار، دامداری، سفارشات، بازار، ارتقا
-└── lib/
-    └── telegram.ts     # هوک یکپارچگی با تلگرام
+│   ├── globals.css       Global game styles
+│   ├── layout.tsx        Root metadata and document layout
+│   └── page.tsx          Main game screen
+└── components/
+    ├── Art.tsx           Shared SVG asset renderer
+    ├── BottomNav.tsx     Main navigation
+    ├── FarmScene.tsx     Isometric fruit plot
+    ├── Icons.tsx         Shared resource icons
+    ├── SeedPanel.tsx     Seed catalog and plant-all action
+    ├── SideButtons.tsx   Context actions around the farm
+    └── TopBar.tsx        Level and resource counters
 ```
 
-## دیپلوی
+The `photos` directory contains visual references used for the frontend prototype.
 
-روی [Vercel](https://vercel.com) دیپلوی شده است.
+## Deployment
+
+The repository includes Vercel configuration for a standard Next.js deployment.

@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { CoinIcon, GemIcon } from "./Icons";
 
 type StatChipProps = {
@@ -18,7 +15,7 @@ function StatChip({ icon, value, onPlus }: StatChipProps) {
       </span>
       {onPlus && (
         <button
-          aria-label="افزودن"
+          aria-label="Add"
           className="inline-flex items-center justify-center w-5 h-5 rounded-full text-white font-black shrink-0"
           style={{
             background: "linear-gradient(180deg,#86c93f,#4e8a24)",
@@ -36,17 +33,17 @@ function StatChip({ icon, value, onPlus }: StatChipProps) {
 }
 
 export default function TopBar() {
-  const [level, setLevel] = useState<number>(12);
+  const level = 12;
   const xp = 720;
   const xpMax = 1200;
 
   return (
     <div className="sticky top-0 z-40 px-2 pt-2 pb-1.5">
-      {/* ردیف اول: ستاره + لول + تنظیمات */}
+
       <div className="flex items-center gap-1.5">
-        {/* ستاره/لول با XP */}
+
         <div className="stat-chip flex items-center gap-2 rounded-full pl-2 pr-1.5 py-1 flex-1 min-w-0">
-          {/* آیکون ستاره */}
+
           <div
             className="relative w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
             style={{
@@ -65,7 +62,7 @@ export default function TopBar() {
               />
             </svg>
           </div>
-          {/* لول + XP */}
+
           <div className="flex flex-col min-w-0 flex-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black text-[#ffd94f]">LV {level}</span>
@@ -85,9 +82,8 @@ export default function TopBar() {
           </div>
         </div>
 
-        {/* دکمه تنظیمات */}
         <button
-          aria-label="تنظیمات"
+          aria-label="Settings"
           className="stat-chip w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -103,16 +99,15 @@ export default function TopBar() {
         </button>
       </div>
 
-      {/* ردیف دوم: سکه + الماس */}
       <div className="flex items-center gap-1.5 mt-1.5">
         <StatChip
           icon={<CoinIcon size={22} />}
-          value="۱۲۵K"
+          value="125K"
           onPlus
         />
         <StatChip
           icon={<GemIcon size={20} />}
-          value="۸۵۰"
+          value="850"
           onPlus
         />
       </div>

@@ -1,27 +1,16 @@
-"use client";
-
-/**
- * Farm Grid - زمین کشاورزی 5x6 Isometric
- * زمین‌های خالی آماده کشت با حصار چوبی اطراف
- */
-
 type TileState = "empty" | "tilled" | "planted";
 
 type FarmTile = {
   state: TileState;
-  // اگه planted باشه، یک Sprite کوچک از درخت/نهال
   stage?: number;
 };
 
 const COLS = 5;
 const ROWS = 6;
 
-// ابعاد یک تایل الماسی (isometric)
 const TILE_W = 64;
 const TILE_H = 32;
-// فاصله بین تایل‌ها
 const GAP = 2;
-// حد کلی خاک
 const SOIL_W = TILE_W - 4;
 const SOIL_H = TILE_H - 2;
 
@@ -37,9 +26,6 @@ function makeGrid(): FarmTile[][] {
   return grid;
 }
 
-/**
- * یک تایل الماسی خالی - توی عکس، زمین‌ها به شکل لوزی سبز/قهوه‌ای هستند
- */
 function FarmTileDiamond({
   row,
   col,
@@ -49,12 +35,9 @@ function FarmTileDiamond({
   col: number;
   state: TileState;
 }) {
-  // موقعیت ایزومتریک
   const x = (col - (COLS - 1) / 2) * (TILE_W + GAP);
-  // ردیف‌های پایینی جلوترن (پایین‌تر)
   const yIso = (row - (ROWS - 1) / 2) * ((TILE_H + GAP) / 2);
   const xIso = -((col - (COLS - 1) / 2) * ((TILE_W + GAP) / 2));
-  // جابجایی برای عمق ایزومتریک
   const top = yIso - xIso / 2;
   const left = x / 2 + xIso / 2;
 
@@ -69,7 +52,7 @@ function FarmTileDiamond({
         transform: "translate(-50%, -50%)",
       }}
     >
-      {/* لوزی خاک - با چرخش 45 درجه */}
+
       <div
         style={{
           position: "absolute",
@@ -83,7 +66,6 @@ function FarmTileDiamond({
             width: SOIL_W,
             height: SOIL_H,
             margin: "auto",
-            // ===== زمین خالی: طوسی-قهوه‌ای تیره =====
             background:
               state === "empty"
                 ? "linear-gradient(135deg, #6b4e2d 0%, #4d3520 100%)"
@@ -93,7 +75,6 @@ function FarmTileDiamond({
             border: "1.5px solid #3a2510",
             boxShadow:
               "inset 0 1px 2px rgba(255,255,255,0.15), 0 1px 0 rgba(0,0,0,0.4)",
-            // الگوی خاک
             backgroundImage:
               state === "empty"
                 ? `repeating-linear-gradient(45deg, #3a2510 0 2px, transparent 2px 8px)`
@@ -105,9 +86,6 @@ function FarmTileDiamond({
   );
 }
 
-/**
- * پست‌های چوبی حصار - در هر گوشه
- */
 function FencePost({ x, y }: { x: number; y: number }) {
   return (
     <div
@@ -132,9 +110,6 @@ function FencePost({ x, y }: { x: number; y: number }) {
   );
 }
 
-/**
- * چوب‌های افقی حصار - بین پست‌ها
- */
 function FenceRail({
   x,
   y,
@@ -173,13 +148,6 @@ function FenceRail({
 export default function FarmScene() {
   const grid = makeGrid();
 
-  // موقعیت گوشه‌های حصار بر اساس اندازه grid
-  // grid بعد از چیدمان isometric:
-  // عرض کل = COLS * TILE_W
-  // ارتفاع کل = (ROWS + COLS) * TILE_H / 2
-
-  // پست‌های حصارگاه در ۴ گوشه + وسط
-  // گوشه شمال غربی (بالا - جلو)
   const halfW = (COLS * (TILE_W + GAP)) / 2;
   const halfH = ((ROWS + COLS) * (TILE_H + GAP)) / 4;
 
@@ -193,7 +161,7 @@ export default function FarmScene() {
           margin: "0 auto",
         }}
       >
-        {/* ===== زیرcyt: سایه نرم زیر زمین ===== */}
+
         <div
           className="absolute"
           style={{
@@ -208,7 +176,6 @@ export default function FarmScene() {
           }}
         />
 
-        {/* ===== زمین زیرین سبز (چمن) ===== */}
         <div
           className="absolute"
           style={{
@@ -224,7 +191,6 @@ export default function FarmScene() {
           }}
         />
 
-        {/* ===== ردیف‌های زمین ===== */}
         {grid.map((row, ri) =>
           row.map((tile, ci) => (
             <FarmTileDiamond
@@ -236,17 +202,14 @@ export default function FarmScene() {
           ))
         )}
 
-        {/* ===== حصار چوبی: پست‌های گوشه ===== */}
-        {/* بالا (بعد) */}
         <FencePost x={0} y={-halfH - 4} />
         <FencePost x={-halfW - 6} y={-halfH + halfW / 2 - 4} />
         <FencePost x={halfW + 6} y={-halfH + halfW / 2 - 4} />
-        {/* پایین (جلو) */}
+
         <FencePost x={0} y={halfH - 4} />
         <FencePost x={-halfW - 6} y={halfH - halfW / 2 - 4} />
         <FencePost x={halfW + 6} y={halfH - halfW / 2 - 4} />
 
-        {/* ===== چوب‌های افقی حصار (شمال - شرق - غرب - جنوب) ===== */}
         <FenceRail
           x={-halfW / 2 - 3}
           y={-halfH - 4}

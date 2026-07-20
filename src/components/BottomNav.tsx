@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-// =================== آیکون‌های ناوبری ===================
 const FarmIcon = ({ size = 20 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <path
@@ -82,11 +81,11 @@ type NavItem = {
 };
 
 const items: NavItem[] = [
-  { key: "farm", label: "مزرعه", Icon: FarmIcon },
-  { key: "market", label: "بازار", Icon: MarketIcon },
-  { key: "warehouse", label: "انبار", Icon: WarehouseIcon, locked: true },
-  { key: "factory", label: "کارخانه", Icon: FactoryIcon, locked: true },
-  { key: "prestige", label: "پرستیژ", Icon: PrestigeIcon, locked: true },
+  { key: "farm", label: "Farm", Icon: FarmIcon },
+  { key: "market", label: "Market", Icon: MarketIcon },
+  { key: "warehouse", label: "Warehouse", Icon: WarehouseIcon, locked: true },
+  { key: "factory", label: "Factory", Icon: FactoryIcon, locked: true },
+  { key: "prestige", label: "Prestige", Icon: PrestigeIcon, locked: true },
 ];
 
 export default function BottomNav() {

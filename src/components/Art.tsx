@@ -1,7 +1,6 @@
-import React from "react";
+import type { CSSProperties } from "react";
 
-// کامپوننت پایه: SVG رنگی را از public/art به‌صورت <img> نمایش می‌دهد.
-// استفاده از <img> از تداخل idهای gradient بین چند SVG جلوگیری می‌کند.
+// Render public SVG artwork as images to avoid gradient ID collisions between files.
 export function Art({
   name,
   size = 24,
@@ -13,7 +12,7 @@ export function Art({
   size?: number;
   className?: string;
   alt?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
