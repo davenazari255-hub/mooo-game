@@ -27,15 +27,15 @@
   .phone{width:430px;max-width:100%;height:862px;border-radius:46px;position:relative;background:#0d0f12;padding:11px;
     box-shadow:0 42px 84px -22px rgba(0,0,0,.75), 0 0 0 2px #04060a, inset 0 0 0 2px #262c33;}
   .screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:#6f9f33;isolation:isolate}
-  .scroller{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;z-index:1;padding-bottom:78px;scrollbar-width:none}
+  .scroller{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;z-index:1;padding:70px 0 80px;scrollbar-width:none}
   .scroller::-webkit-scrollbar{display:none}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:128px;height:25px;background:#0d0f12;border-radius:0 0 15px 15px;z-index:90}
 
   /* ================= SCENE (painted art) ================= */
-  .scenebox{position:relative;width:100%;aspect-ratio:1080/1935;z-index:1}
+  .scenebox{position:relative;width:100%;aspect-ratio:1080/1064;z-index:1}
   .scene-img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;user-select:none;pointer-events:none}
 
-  /* plot markers — measured grid: cols 24.71/37.40/50.22/62.95/75.81 · rows 31.54/38.49/45.48/52.49/59.58 */
+  /* plot markers — cropped scene grid: cols 24.71/37.40/50.22/62.95/75.81 · rows 22.80/35.44/48.15/60.89/73.78 */
   .marker{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center}
   .marker.lock{width:9.5%;aspect-ratio:1;opacity:.96}
   .marker.lock .chip{width:74%;aspect-ratio:1;border-radius:26%;display:grid;place-items:center;
@@ -81,7 +81,7 @@
   .gearbtn img{width:21px;height:21px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
 
   /* ================= SIDE RAILS ================= */
-  .rail{position:absolute;z-index:35;display:flex;flex-direction:column;gap:9px;top:26.6%}
+  .rail{position:absolute;z-index:35;display:flex;flex-direction:column;gap:9px;top:12.4%}
   .rail.left{left:5px}.rail.right{right:5px}
   .chipbtn{position:relative;width:50px;height:53px;border-radius:13px;
     background:linear-gradient(180deg,#7d5c28 0%,#63471a 45%,#523a13 100%);
@@ -95,7 +95,7 @@
     font-weight:800;font-size:9.5px;display:grid;place-items:center;box-shadow:0 2px 3px rgba(0,0,0,.4)}
 
   /* ================= PLANT ALL ================= */
-  .plant-all{position:absolute;left:50%;top:63.8%;transform:translateX(-50%);z-index:30;
+  .plant-all{position:absolute;left:50%;top:81.2%;transform:translateX(-50%);z-index:30;
     min-width:186px;border:0;cursor:pointer;border-radius:19px;padding:8px 22px 9px;
     font-family:var(--display);color:#fff;
     background:linear-gradient(180deg,var(--g1) 0%,var(--g2) 55%,var(--g3) 100%);
@@ -106,7 +106,7 @@
   .plant-all .l2 svg,.plant-all .l2 img{width:17px;height:17px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
 
   /* ================= SEED PANEL ================= */
-  .seedwrap{position:relative;margin:-60% 8px 0;z-index:5}
+  .seedwrap{position:relative;margin:-10px 8px 0;z-index:5}
   .tabs{display:flex;gap:4px;padding:0 10px;position:relative;z-index:2}
   .tab{flex:1;text-align:center;font-weight:700;font-size:11.5px;color:#f2e0b8;padding:8px 2px 7px;
     border-radius:12px 12px 0 0;border:2.5px solid var(--wood-edge);border-bottom:none;
@@ -168,5 +168,5 @@ html,body{margin:0;padding:0;height:100%;overscroll-behavior:none;background:#6a
 body{min-height:100dvh;overflow:hidden;}
 .app{position:relative;width:100%;max-width:520px;margin:0 auto;height:100dvh;overflow:hidden;isolation:isolate;background:#6f9f33;}
 .hud{padding-top:calc(env(safe-area-inset-top,0px) + 8px);}
+.scroller{padding-top:calc(env(safe-area-inset-top,0px) + 50px);padding-bottom:calc(86px + env(safe-area-inset-bottom,0px));}
 .nav{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);}
-.scroller{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px));}
