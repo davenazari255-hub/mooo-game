@@ -35,19 +35,30 @@
 
   /* plot markers — composite scene grid: cols 24.71/37.40/50.22/62.95/75.81 · rows 12.59/18.20/23.85/29.52/35.25 */
   .marker{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center}
-  .marker.lock{width:9.5%;aspect-ratio:1;opacity:.96}
-  .marker.lock .chip{width:74%;aspect-ratio:1;border-radius:26%;display:grid;place-items:center;
-    background:linear-gradient(180deg,rgba(46,30,14,.58),rgba(30,19,8,.62));
-    box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18), inset 0 -2px 3px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.3);
-    border:1.5px solid rgba(24,15,6,.55)}
-  .marker.lock img{width:78%;height:78%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4))}
-  .marker.plus{width:10%;aspect-ratio:1;cursor:pointer}
-  .marker.plus .chip{width:78%;aspect-ratio:1;border-radius:30%;display:grid;place-items:center;
-    background:linear-gradient(180deg,var(--g1) 0%,var(--g2) 58%,var(--g3) 100%);
-    border:2px solid var(--g-edge);
-    box-shadow:inset 0 2.5px 0 rgba(255,255,255,.55), inset 0 -3px 0 rgba(0,0,0,.16), 0 4px 0 rgba(45,74,14,.9), 0 7px 10px rgba(0,0,0,.32);
-    animation:pulse 2.1s ease-in-out infinite}
-  .marker.plus .plusimg{width:82%;height:82%;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35));animation:pulse 2.1s ease-in-out infinite}
+  .marker.plot{width:13.2%;aspect-ratio:1;cursor:pointer;z-index:5}
+  .marker.plot .pimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative}
+  .marker.plot img{object-fit:contain}
+  .marker.plot img.i-plus{width:62%;animation:pulse 2.1s ease-in-out infinite;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+  .marker.plot img.i-lock{width:56%;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4))}
+  .marker.plot img.i-grow{width:66%;filter:drop-shadow(0 3px 3px rgba(0,0,0,.3))}
+  .marker.plot img.i-tree{width:132%;max-width:none;margin-top:-16%;filter:drop-shadow(0 5px 6px rgba(0,0,0,.35));animation:pulse 1.7s ease-in-out infinite}
+  .timechip{position:absolute;bottom:-17%;left:50%;transform:translateX(-50%);background:rgba(28,18,7,.9);color:#ffd75e;
+    font-size:9px;font-weight:700;padding:1.5px 7px;border-radius:9px;white-space:nowrap;border:1.5px solid rgba(0,0,0,.35);z-index:6;font-family:var(--font)}
+  .timechip.ready{color:#a9f070}
+  .shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(calc(-50% - 4px),-50%)}75%{transform:translate(calc(-50% + 4px),-50%)}}
+  .floaty{position:absolute;z-index:70;transform:translate(-50%,0);font-family:var(--display);font-weight:800;color:#ffd75e;
+    text-shadow:0 2px 2px rgba(0,0,0,.55);font-size:16px;pointer-events:none;animation:floatup 1.1s ease-out forwards}
+  @keyframes floatup{0%{opacity:0}15%{opacity:1}100%{opacity:0;margin-top:-46px}}
+  #toast{position:absolute;top:82px;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(28,18,7,.93);color:#ffedc4;
+    font-weight:600;font-size:12.5px;padding:8px 16px;border-radius:14px;border:1.5px solid #5b3a17;z-index:80;opacity:0;
+    pointer-events:none;transition:all .25s;white-space:nowrap;font-family:var(--font)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #ffBtn{position:absolute;right:8px;top:44%;z-index:45;background:linear-gradient(180deg,#4a3423,#2f2114);border:2px solid #211609;
+    border-radius:14px;color:#ffd75e;font-weight:700;font-size:11px;padding:7px 10px;font-family:var(--font);
+    box-shadow:inset 0 2px 2px rgba(255,255,255,.12), 0 3px 5px rgba(0,0,0,.3);cursor:pointer}
+  .seedwrap.selecting .panel{box-shadow:0 0 0 3px #ffd75e, inset 0 3px 0 rgba(255,255,255,.22), inset 0 -4px 6px rgba(0,0,0,.25), 0 8px 14px rgba(0,0,0,.4)}
+  .card{cursor:pointer}
   @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 
   /* ================= HUD ================= */
@@ -167,3 +178,4 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;overscroll-behavior:non
 .hud{padding-top:calc(env(safe-area-inset-top,0px) + 8px);}
 .nav{height:auto;min-height:70px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);}
 .seedwrap{bottom:calc(76px + env(safe-area-inset-bottom,0px));}
+#toast{top:calc(env(safe-area-inset-top,0px) + 56px);}
